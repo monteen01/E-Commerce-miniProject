@@ -8,7 +8,6 @@ import CartPage from "./components/CartPage";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
-
 import ProductDescription from "./components/ProductDescription";
 
 function App() {
