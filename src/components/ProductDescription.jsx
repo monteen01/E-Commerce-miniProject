@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Spinner from "./Spinner";
+import { CircleChevronLeft } from "lucide-react";
 
 const ProductDescription = () => {
   const { id } = useParams();
@@ -30,15 +31,15 @@ const ProductDescription = () => {
   if (error) return <p className="text-red-500 text-center mt-8">{error}</p>;
 
   return (
-    <section className="max-w-4xl mx-auto p-4 ">
+    <section className="max-w-4xl mx-auto p-4 mt-[5rem] ">
       <button
         onClick={() => navigate(-1)}
-        className="mb-4 text-blue-500 hover:underline"
+        className="mb-4 text-blue-500 hover:scale-110 transform transition ease-out "
       >
-        ← Back to Products
+        <CircleChevronLeft size={32} />
       </button>
 
-      <div className="bg-gray-900 text-white rounded-lg p-6 shadow-lg">
+      <div className=" text-white rounded-lg p-6 ">
         <div className="flex flex-col md:flex-row ">
           {/* Image Section */}
           <div className="w-full md:w-1/2 flex justify-center items-center mb-4 md:mb-0 ">

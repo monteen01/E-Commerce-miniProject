@@ -1,14 +1,18 @@
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import {
+  NavBar,
+  Hero,
+  Products,
+  CartPage,
+  Signup,
+  Login,
+  ProtectedRoute,
+  ProductDescription,
+} from "./components/components";
+import toast, { Toaster } from "react-hot-toast";
+import { isAuthenticated } from "./utils/auth";
 import "./App.css";
-import NavBar from "./components/NavBar";
-import Hero from "./components/Hero";
-import Products from "./components/Products";
-import CartPage from "./components/CartPage";
-import Signup from "./components/Signup";
-import Login from "./components/Login";
-import ProtectedRoute from "./components/ProtectedRoute";
-import ProductDescription from "./components/ProductDescription";
 
 function App() {
   // State
@@ -16,21 +20,22 @@ function App() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [cart, setCart] = useState([]); // Cart state
+  const [cart, setCart] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const API_URL = "https://fakestoreapi.com/products";
 
-  // Check authentication on app load
+  // Checking authentication on app load
   useEffect(() => {
-    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const loggedInUser = isAuthenticated();
     if (
       !loggedInUser &&
       !["/login", "/signup"].includes(window.location.pathname)
     ) {
       navigate("/login");
     }
-  }, [navigate]);
+  }, [navigate, location.pathname]);
 
   // Fetch products
   const fetchProducts = async (query = "") => {
@@ -63,12 +68,17 @@ function App() {
 
   // cart operations
   const cartOperations = {
+    // add to cart
     addToCart: (product) => {
       setCart((prev) => [...prev, { ...product, quantity: 1 }]);
+      toast.success("Product added to cart");
     },
+    // remove from cart
     removeFromCart: (productId) => {
       setCart((prev) => prev.filter((item) => item.id !== productId));
+      toast.success("Product removed from cart");
     },
+    // update quantity
     updateQuantity: (productId, newQuantity) => {
       setCart((prev) =>
         prev.map((item) =>
@@ -78,14 +88,18 @@ function App() {
     },
   };
 
-  // Fetch all products on component mount
   useEffect(() => {
     fetchProducts(searchQuery);
   }, [searchQuery]);
 
   return (
-    <main className="">
-      <section id="navbar">
+    <main className="bg-[#021526]">
+      <Toaster />
+
+      <section
+        id="navbar"
+        className="h-full w-full flex justify-center align-center"
+      >
         <NavBar cartCount={cart.length} />
       </section>
 
@@ -116,13 +130,7 @@ function App() {
           />
           <Route
             path="/cart"
-            element={
-              <CartPage
-                cart={cart}
-                removeFromCart={cartOperations.removeFromCart}
-                updateQuantity={cartOperations.updateQuantity}
-              />
-            }
+            element={<CartPage cart={cart} cartOperations={cartOperations} />}
           />
           <Route path="/description/:id" element={<ProductDescription />} />
         </Route>

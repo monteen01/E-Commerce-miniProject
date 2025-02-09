@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { isAuthenticated } from "../utils/auth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -7,21 +8,26 @@ const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  // Added authentication check for already logged-in users
+  useEffect(() => {
+    if (isAuthenticated()) {
+      navigate("/");
+    }
+  }, [navigate]);
+
+  // Inside handleLogin function:
   const handleLogin = (e) => {
     e.preventDefault();
 
-    // Get users from localStorage
     const users = JSON.parse(localStorage.getItem("users")) || [];
-
-    // Find the user
     const user = users.find(
       (user) => user.email === email && user.password === password
     );
 
     if (user) {
-      // Save the logged-in user in localStorage
-      localStorage.setItem("loggedInUser", JSON.stringify(user));
-      navigate("/"); // Redirect to home page
+      // Store token instead of user object
+      localStorage.setItem("token", user.token);
+      navigate("/");
     } else {
       setError("Invalid email or password.");
     }

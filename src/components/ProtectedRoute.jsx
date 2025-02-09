@@ -1,8 +1,18 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate, Outlet } from "react-router-dom";
+import { isAuthenticated } from "../utils/auth";
 
 const ProtectedRoute = () => {
-  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-  return loggedInUser ? <Outlet /> : <Navigate to="/login" replace />;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  // Render Outlet for nested routes instead of children
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

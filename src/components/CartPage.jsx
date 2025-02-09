@@ -9,7 +9,7 @@ const CartPage = ({ cart, cartOperations }) => {
   );
 
   return (
-    <section className="mx-4 my-8">
+    <section className="mx-4 mt-[5rem]">
       <h2 className="text-2xl font-bold mb-4">Your Cart</h2>
 
       {cart.length === 0 ? (
@@ -18,12 +18,14 @@ const CartPage = ({ cart, cartOperations }) => {
         <>
           <div className="space-y-4">
             {cart.map((product) => (
-              <Link
-                to={`/description/${product.id}`}
+              <div
                 key={product.id}
                 className="flex items-center justify-between p-4 bg-gray-900 rounded-lg text-white w-[75%] "
               >
-                <div className="flex items-center space-x-4">
+                <Link
+                  to={`/description/${product.id}`}
+                  className="flex items-center space-x-4"
+                >
                   <img
                     src={product.image}
                     alt={product.title}
@@ -33,7 +35,7 @@ const CartPage = ({ cart, cartOperations }) => {
                     <h3 className="text-lg font-semibold">{product.title}</h3>
                     <p className="text-gray-300">${product.price.toFixed(2)}</p>
                   </div>
-                </div>
+                </Link>
 
                 <div className="flex items-center space-x-4">
                   <input
@@ -56,7 +58,7 @@ const CartPage = ({ cart, cartOperations }) => {
                     Remove
                   </button>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
 
